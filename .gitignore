@@ -1,0 +1,11 @@
+# Node.js
+node_modules/
+.env
+.DS_Store
+.vscode/
+logs/
+*.log
+npm-debug.log*
+
+# Optional:
+*.env.local
