@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        .fade-in { animation: fadeIn 1.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: none; } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 via-red-200 to-gray-300 text-gray-900 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-red-800 via-red-700 to-red-600 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-10">
+        <div class="text-2xl font-extrabold tracking-wide flex items-center gap-2">
+            <span class="inline-block bg-white bg-opacity-10 rounded-full p-1"><svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/><circle cx="12" cy="11" r="3"/></svg></span>BloodLink
+        </div>
+        <div class="space-x-6 text-lg">
+            <a href="/patient/request-blood" class="hover:underline transition">Request Blood</a>
+            <a href="/patient/request-history" class="hover:underline transition">Request History</a>
+            <a href="/patient/p-notification" class="hover:underline transition">Notifications</a>
+            <a href="/" class="ml-4 hover:underline transition">Logout</a>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-red-900 via-red-700 to-gray-200 py-10 flex flex-col items-center justify-center text-center mb-8 fade-in">
+        <div class="relative z-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-2 text-red-100 drop-shadow">Welcome, Patient!</h1>
+            <p class="text-lg md:text-2xl text-gray-100 mb-2 max-w-2xl mx-auto">Manage your blood requests and stay updated.</p>
+        </div>
+    </section>
+    <!-- Main Content -->
+    <main class="flex-1 p-6 max-w-5xl mx-auto w-full">
+        <!-- Current Request Status -->
+        <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl mb-8 border-l-4 border-red-700 fade-in">
+            <h2 class="text-lg font-semibold mb-2 text-red-800">🩸 Current Blood Request</h2>
+            <p>Your request for <span class="font-bold">O+ blood</span> at <span class="font-bold">City Hospital</span> is <span class="font-bold text-yellow-600">Pending</span>.</p>
+        </div>
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 fade-in">
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+                <h3 class="text-lg font-semibold text-red-800">Total Requests</h3>
+                <p class="text-3xl font-bold text-red-700 mt-2">3</p>
+            </div>
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+                <h3 class="text-lg font-semibold text-red-800">Fulfilled</h3>
+                <p class="text-3xl font-bold text-green-600 mt-2">2</p>
+            </div>
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+                <h3 class="text-lg font-semibold text-red-800">Pending</h3>
+                <p class="text-3xl font-bold text-yellow-600 mt-2">1</p>
+            </div>
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+                <h3 class="text-lg font-semibold text-red-800">Cancelled</h3>
+                <p class="text-3xl font-bold text-gray-600 mt-2">0</p>
+            </div>
+        </div>
+        <!-- Latest Notifications -->
+        <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl fade-in">
+            <h2 class="text-lg font-semibold mb-2 text-red-800">🔔 Latest Notifications</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li>Donor Rohan accepted your O+ request for July 10, 2025.</li>
+                <li>Previous request for A+ was cancelled due to no donor found.</li>
+            </ul>
+            <a href="/patient/p-notification" class="mt-4 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white px-4 py-2 rounded font-semibold shadow hover:bg-red-800 inline-block text-center transition">View All Notifications</a>
+            <a href="/patient/request-blood" class="bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-red-800 transition">Request Blood</a>
+        </div>
+        <!-- Patient Data Table (Static placeholder) -->
+        <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl fade-in mt-8">
+            <h2 class="text-lg font-semibold mb-4 text-red-800">🩸 Patient List</h2>
+            <p class="text-gray-700">Patient data will be displayed here soon.</p>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-red-900 via-red-700 to-gray-200 text-gray-100 text-center py-4 mt-12 border-t shadow-inner">
+        <span class="font-semibold">&copy; 2025 BloodLink. All rights reserved.</span>
+    </footer>
+</body>
+</html>

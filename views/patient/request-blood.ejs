@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Blood</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Montserrat', sans-serif; }
+        .fade-in { animation: fadeIn 1.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: none; } }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 via-red-200 to-gray-300 text-gray-900 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-red-800 via-red-700 to-red-600 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-10">
+        <div class="text-2xl font-extrabold tracking-wide flex items-center gap-2">
+            <span class="inline-block bg-white bg-opacity-10 rounded-full p-1"><svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/><circle cx="12" cy="11" r="3"/></svg></span>BloodLink
+        </div>
+        <div class="space-x-6 text-lg">
+            <a href="/patient" class="hover:underline transition">Dashboard</a>
+            <a href="/patient/request-blood" class="underline font-bold">Request Blood</a>
+            <a href="/patient/request-history" class="hover:underline transition">Request History</a>
+            <a href="/patient/p-notification" class="hover:underline transition">Notifications</a>
+            <a href="/" class="ml-4 hover:underline transition">Logout</a>
+        </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-red-900 via-red-700 to-gray-200 py-10 flex flex-col items-center justify-center text-center mb-8 fade-in">
+        <div class="relative z-10">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-2 text-red-100 drop-shadow">Request Blood</h1>
+            <p class="text-lg md:text-xl text-gray-100 mb-2 max-w-2xl mx-auto">Submit a new blood request for yourself or a loved one.</p>
+        </div>
+    </section>
+    <!-- Content -->
+    <main class="flex-1 p-6 max-w-2xl mx-auto w-full">
+        <form class="space-y-6 fade-in" onsubmit="handleSubmit(event)">
+            <!-- Patient Info -->
+            <div>
+                <label class="block font-semibold">Full Name</label>
+                <input type="text" class="w-full p-3 border-2 border-red-300 rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Enter your name" required>
+            </div>
+            <div>
+                <label class="block font-semibold">Contact Number</label>
+                <input type="tel" class="w-full p-3 border-2 border-red-300 rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Enter your contact number" required>
+            </div>
+            <!-- Blood Request Details -->
+            <div>
+                <label class="block font-semibold">Blood Type</label>
+                <select class="w-full p-3 border-2 border-red-300 rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600" required>
+                    <option value="">Select Blood Type</option>
+                    <option>A+</option>
+                    <option>A-</option>
+                    <option>B+</option>
+                    <option>B-</option>
+                    <option>O+</option>
+                    <option>O-</option>
+                    <option>AB+</option>
+                    <option>AB-</option>
+                </select>
+            </div>
+            <div>
+                <label class="block font-semibold">Hospital Name</label>
+                <input type="text" class="w-full p-3 border-2 border-red-300 rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Enter hospital name" required>
+            </div>
+            <div>
+                <label class="block font-semibold">Required Date</label>
+                <input type="date" class="w-full p-3 border-2 border-red-300 rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600" required>
+            </div>
+            <div>
+                <label class="block font-semibold">Quantity (Units)</label>
+                <input type="number" class="w-full p-3 border-2 border-red-300 rounded bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600" placeholder="Enter number of units" required>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200">Submit Request</button>
+        </form>
+    </main>
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Blood request submitted successfully!');
+            window.location.href = 'patient.html';  // Redirect to patient main page
+        }
+    </script>
+    <!-- Footer -->
+    <footer class="bg-gradient-to-r from-red-900 via-red-700 to-gray-200 text-gray-100 text-center py-4 mt-12 border-t shadow-inner">
+        <span class="font-semibold">&copy; 2025 BloodLink. All rights reserved.</span>
+    </footer>
+</body>
+</html>
