@@ -13,6 +13,15 @@
     .fade-in { animation: fadeIn 1.2s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: none; } }
   </style>
+
+
+
+
+
+
+
+
+
 </head>
 <body class="bg-gradient-to-br from-gray-100 via-red-200 to-gray-300 text-gray-900 min-h-screen flex flex-col">
   <!-- Navbar -->
@@ -39,10 +48,15 @@
   <main class="flex-1 flex flex-col items-center justify-center">
     <div class="bg-white bg-opacity-95 p-10 rounded-3xl shadow-2xl w-full max-w-md fade-in border border-red-200">
       <h2 class="text-3xl font-extrabold mb-6 text-center text-red-800">Login</h2>
-      <form onsubmit="return loginRedirect()" class="space-y-5">
+      <% if (typeof errorMessage !== 'undefined') { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <span class="block sm:inline"><%= errorMessage %></span>
+        </div>
+      <% } %>
+      <form action="/login" method="POST" class="space-y-5">
         <div>
           <label for="role" class="block font-semibold mb-1">Login Role</label>
-          <select id="role" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
+          <select id="role" name="role" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
             <option value="">Select Role</option>
             <option value="admin">Admin</option>
             <option value="patient">Patient</option>
@@ -50,13 +64,13 @@
           </select>
         </div>
         <div>
-          <label for="username" class="block font-semibold mb-1">Username</label>
-          <input type="text" id="username" placeholder="Enter Username" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
+          <label for="name" class="block font-semibold mb-1">Name</label>
+          <input type="text" id="name" name="name" placeholder="Enter Name" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
         </div>
         <div>
           <label for="password" class="block font-semibold mb-1">Password</label>
           <div class="relative">
-            <input type="password" id="password" placeholder="Enter Password" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 pr-10 bg-gray-50">
+            <input type="password" id="password" name="password" placeholder="Enter Password" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 pr-10 bg-gray-50">
             <span class="absolute right-3 top-2.5 cursor-pointer text-gray-400 hover:text-red-700 transition" onclick="togglePassword()">&#128064;</span>
           </div>
         </div>
@@ -84,21 +98,21 @@
       password.type = password.type === "password" ? "text" : "password";
     }
 
-    function loginRedirect() {
+    document.querySelector('form').addEventListener('submit', function(event) {
       const role = document.getElementById("role").value;
-
-      if (role === "donor") {
-        window.location.href = "Donor/donor";
-      } else if (role === "patient") {
-        window.location.href = "Patient/patient";
-      } else if (role === "admin") {
-        window.location.href = "Admin/admin";
-      } else {
-        alert("Please select a role.");
+      
+      if (role !== 'patient') {
+        event.preventDefault();
+        if (role === "donor") {
+          window.location.href = "Donor/donor";
+        } else if (role === "admin") {
+          window.location.href = "Admin/admin";
+        } else {
+          alert("Please select a role.");
+        }
       }
-
-      return false;
-    }
+      // If role is patient, let the form submit normally to handle database authentication
+    });
   </script>
 </body>
 </html>

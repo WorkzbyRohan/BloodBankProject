@@ -34,58 +34,123 @@
     </div>
   </section>
   <!-- Sign Up Form -->
+  
   <main class="flex-1 flex flex-col items-center justify-center">
-    <div class="bg-white bg-opacity-95 p-10 rounded-3xl shadow-2xl w-full max-w-md fade-in border border-red-200">
-      <h2 class="text-3xl font-extrabold mb-6 text-center text-red-800">Sign Up</h2>
-      <form class="space-y-5" onsubmit="window.location.href='/index'; return false;">
+  <div class="bg-white bg-opacity-95 p-10 rounded-3xl shadow-2xl w-full max-w-md fade-in border border-red-200">
+    <h2 class="text-3xl font-extrabold mb-6 text-center text-red-800">Sign Up</h2>
+    <% if (typeof errorMessage !== 'undefined') { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <span class="block sm:inline"><%= errorMessage %></span>
+      </div>
+    <% } %>
+    <form action="/signup" method="POST" class="space-y-5" onsubmit="return validateForm();">
+      
+      <div>
+        <label for="role" class="block font-semibold mb-1">Role</label>
+        <select id="role" name="role" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <option value="">Select Role</option>
+          <option value="patient">Patient</option>
+          <option value="donor">Donor</option>
+        </select>
+      </div>
 
-        
-<div>
-  <label for="username" class="block font-semibold mb-1">Username</label>
-  <input type="text" id="username" placeholder="Choose a Username" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
-</div>
+      <div>
+        <label for="name" class="block font-semibold mb-1">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter Full Name" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+      </div>
 
-<div>
-  <label for="password" class="block font-semibold mb-1">Password</label>
-  <input type="password" id="password" placeholder="Choose a Password" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
-</div>
+      <div>
+        <label for="ssn" class="block font-semibold mb-1">SSN (14 digits)</label>
+        <input type="text" id="ssn" name="ssn" pattern="\d{14}" placeholder="Enter SSN" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+      </div>
 
-        <div>
-          <label for="name" class="block font-semibold mb-1">Full Name</label>
-          <input type="text" id="name" placeholder="Enter Full Name" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
-        </div>
-        <div>
-          <label for="ssn" class="block font-semibold mb-1">SSN / ID</label>
-          <input type="text" id="ssn" placeholder="Enter SSN or ID" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
-        </div>
-        <div>
-          <label for="contact" class="block font-semibold mb-1">Contact Number</label>
-          <input type="tel" id="contact" placeholder="Enter Contact Number" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
-        </div>
-        <div>
-          <label for="blood" class="block font-semibold mb-1">Blood Type</label>
-          <select id="blood" required class="w-full border-2 border-red-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-600 bg-gray-50">
-            <option value="">Select Blood Type</option>
-            <option value="A+">A+</option>
-            <option value="A-">A-</option>
-            <option value="B+">B+</option>
-            <option value="B-">B-</option>
-            <option value="AB+">AB+</option>
-            <option value="AB-">AB-</option>
-            <option value="O+">O+</option>
-            <option value="O-">O-</option>
-          </select>
-        </div>
-        <div class="flex space-x-4 mt-4">
-          <button type="submit" class="flex-1 bg-gradient-to-r from-red-700 via-red-600 to-red-500 text-white py-2 rounded-xl font-bold shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-200">Sign Up</button>
-          <button type="button" class="flex-1 bg-gray-200 text-gray-700 py-2 rounded-xl font-semibold shadow hover:bg-gray-300 transition" onclick="window.location.href='/index'">Back to Login</button>
-        </div>
-      </form>
-    </div>
-  </main>
+      <div>
+        <label for="contact" class="block font-semibold mb-1">Contact No</label>
+        <input type="text" id="contact" name="contact" pattern="03\d{2}-\d{7}" placeholder="03XX-XXXXXXX" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+      </div>
+
+      <div>
+        <label for="bloodType" class="block font-semibold mb-1">Blood Type</label>
+        <select id="bloodType" name="bloodType" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <option value="">Select Blood Type</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="gender" class="block font-semibold mb-1">Gender</label>
+        <select id="gender" name="gender" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+          <option value="">Select Gender</option>
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="password" class="block font-semibold mb-1">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter Password" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+      </div>
+
+      <div>
+        <label for="confirmPassword" class="block font-semibold mb-1">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+      </div>
+
+      <div class="flex justify-between mt-6">
+        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-xl shadow transition-all duration-200">Sign Up</button>
+        <a href="/index" class="text-gray-600 font-semibold hover:underline self-center">Back to Login</a>
+      </div>
+    </form>
+  </div>
+</main>
+
   <!-- Footer -->
   <footer class="bg-gradient-to-r from-red-900 via-red-700 to-gray-200 text-gray-100 text-center py-4 mt-12 border-t shadow-inner">
     <span class="font-semibold">&copy; 2025 BloodLink. All rights reserved.</span>
   </footer>
+
+  <!-- Validation Script -->
+  <script>
+    function validateForm() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const ssn = document.getElementById('ssn').value;
+      const contact = document.getElementById('contact').value;
+      const role = document.getElementById('role').value;
+
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return false;
+      }
+
+      // Validate SSN format (14 digits)
+      if (!/^\d{14}$/.test(ssn)) {
+        alert('SSN must be exactly 14 digits!');
+        return false;
+      }
+
+      // Validate contact number format (03XX-XXXXXXX)
+      if (!/^03\d{2}-\d{7}$/.test(contact)) {
+        alert('Contact number must be in format 03XX-XXXXXXX!');
+        return false;
+      }
+
+      // Check if role is selected
+      if (!role) {
+        alert('Please select a role!');
+        return false;
+      }
+
+      return true;
+    }
+  </script>
 </body>
 </html>
