@@ -33,4 +33,13 @@ module.exports = class Patient {
       throw err;
     }
   }
+
+  static async getBySSN(ssn) {
+    try {
+      const [rows] = await db.execute('SELECT * FROM patient WHERE SSN = ?', [ssn]);
+      return rows[0] || null;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

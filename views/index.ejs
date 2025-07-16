@@ -97,22 +97,6 @@
       const password = document.getElementById("password");
       password.type = password.type === "password" ? "text" : "password";
     }
-
-    document.querySelector('form').addEventListener('submit', function(event) {
-      const role = document.getElementById("role").value;
-      
-      if (role !== 'patient') {
-        event.preventDefault();
-        if (role === "donor") {
-          window.location.href = "Donor/donor";
-        } else if (role === "admin") {
-          window.location.href = "Admin/admin";
-        } else {
-          alert("Please select a role.");
-        }
-      }
-      // If role is patient, let the form submit normally to handle database authentication
-    });
   </script>
 </body>
 </html>

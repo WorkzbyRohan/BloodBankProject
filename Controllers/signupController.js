@@ -1,4 +1,5 @@
 const Patient = require('../models/patientModel');
+const Donor = require('../models/donorModel');
 
 exports.postSignup = async (req, res, next) => {
     try {
@@ -25,8 +26,25 @@ exports.postSignup = async (req, res, next) => {
                 });
             }
         } else if (role === 'donor') {
-            // Handle donor signup (implement later)
-            res.redirect('/index');
+            // Create new donor
+            const result = await Donor.create({
+                name,
+                ssn,
+                'contact-no': contact,  // Match the database column name
+                bloodType,
+                gender,
+                password
+            });
+
+            if (result) {
+                // Successful signup, redirect to login
+                res.redirect('/index');
+            } else {
+                // Something went wrong
+                res.render('signup', { 
+                    errorMessage: 'Error creating donor account. Please try again.' 
+                });
+            }
         }
     } catch (error) {
         console.error('Signup error:', error);

@@ -48,18 +48,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-center border-b hover:bg-red-50 transition">
-                        <td class="px-6 py-4">O+</td>
-                        <td class="px-6 py-4">City Hospital</td>
-                        <td class="px-6 py-4">2025-07-10</td>
-                        <td class="px-6 py-4 text-yellow-600 font-bold">Pending</td>
-                    </tr>
-                    <tr class="text-center border-b hover:bg-red-50 transition">
-                        <td class="px-6 py-4">A+</td>
-                        <td class="px-6 py-4">Mercy Clinic</td>
-                        <td class="px-6 py-4">2025-06-20</td>
-                        <td class="px-6 py-4 text-green-600 font-bold">Fulfilled</td>
-                    </tr>
+                  <% if (requests && requests.length > 0) { %>
+                    <% requests.forEach(function(request) { %>
+                      <tr class="text-center border-b hover:bg-red-50 transition">
+                        <td class="px-6 py-4"><%= request.BloodType %></td>
+                        <td class="px-6 py-4"><%= request.Hospital %></td>
+                        <%
+                          function formatDate(dateStr) {
+                            if (!dateStr) return '';
+                            const d = new Date(dateStr);
+                            if (isNaN(d)) return dateStr; // fallback
+                            return d.toISOString().slice(0, 10); // YYYY-MM-DD
+                          }
+                        %>
+                        <td class="px-6 py-4"><%= formatDate(request.Date) %></td>
+                        <td class="px-6 py-4 font-bold <%= request.Status === 'Pending' ? 'text-yellow-600' : 'text-green-600' %>"><%= request.Status %></td>
+                      </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr><td colspan="4" class="text-center py-6 text-gray-500">No blood requests found.</td></tr>
+                  <% } %>
                 </tbody>
             </table>
         </div>

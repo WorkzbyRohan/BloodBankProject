@@ -60,13 +60,13 @@
       </div>
 
       <div>
-        <label for="ssn" class="block font-semibold mb-1">SSN (14 digits)</label>
-        <input type="text" id="ssn" name="ssn" pattern="\d{14}" placeholder="Enter SSN" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+        <label for="ssn" class="block font-semibold mb-1">SSN (13 digits)</label>
+        <input type="text" id="ssn" name="ssn" pattern="\d{13}" placeholder="Enter SSN" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
       </div>
 
       <div>
         <label for="contact" class="block font-semibold mb-1">Contact No</label>
-        <input type="text" id="contact" name="contact" pattern="03\d{2}-\d{7}" placeholder="03XX-XXXXXXX" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
+        <input type="text" id="contact" name="contact" pattern="03\d{9}" placeholder="03XXXXXXXXX" required class="w-full border-2 border-red-300 rounded px-3 py-2 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-red-600">
       </div>
 
       <div>
@@ -131,15 +131,15 @@
         return false;
       }
 
-      // Validate SSN format (14 digits)
-      if (!/^\d{14}$/.test(ssn)) {
-        alert('SSN must be exactly 14 digits!');
+      // Validate SSN format (13 digits)
+      if (!/^\d{13}$/.test(ssn)) {
+        alert('SSN must be exactly 13 digits!');
         return false;
       }
 
-      // Validate contact number format (03XX-XXXXXXX)
-      if (!/^03\d{2}-\d{7}$/.test(contact)) {
-        alert('Contact number must be in format 03XX-XXXXXXX!');
+      // Validate contact number format (03XXXXXXXXX)
+      if (!/^03\d{9}$/.test(contact)) {
+        alert('Contact number must be in format 03XXXXXXXXX!');
         return false;
       }
 

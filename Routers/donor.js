@@ -2,10 +2,11 @@
 const express = require('express');
 const donorRouter = express.Router();
 const donorController = require('../Controllers/donorController');
+const { isAuthenticated } = require('../middleware/auth');
 
-donorRouter.get('/donor', donorController.getDonor);
-donorRouter.get('/track-record', donorController.getTrackRecord);
-donorRouter.get('/notifications', donorController.getNotifications);
-donorRouter.get('/benefits', donorController.getBenefits);
+donorRouter.get('/donor', isAuthenticated, donorController.getDonor);
+donorRouter.get('/track-record', isAuthenticated, donorController.getTrackRecord);
+donorRouter.get('/notifications', isAuthenticated, donorController.getNotifications);
+donorRouter.get('/benefits', isAuthenticated, donorController.getBenefits);
 
 module.exports = donorRouter;

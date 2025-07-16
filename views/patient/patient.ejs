@@ -39,21 +39,25 @@
         <!-- Current Request Status -->
         <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl mb-8 border-l-4 border-red-700 fade-in">
             <h2 class="text-lg font-semibold mb-2 text-red-800">🩸 Current Blood Request</h2>
-            <p>Your request for <span class="font-bold">O+ blood</span> at <span class="font-bold">City Hospital</span> is <span class="font-bold text-yellow-600">Pending</span>.</p>
+            <% if (typeof latestRequest !== 'undefined' && latestRequest) { %>
+              <p>Your request for <span class="font-bold"><%= latestRequest.BloodType %> blood</span> at <span class="font-bold"><%= latestRequest.Hospital %></span> is <span class="font-bold <%= latestRequest.Status === 'Pending' ? 'text-yellow-600' : 'text-green-600' %>"><%= latestRequest.Status %></span>.</p>
+            <% } else { %>
+              <p>You have not made any blood requests yet.</p>
+            <% } %>
         </div>
         <!-- Quick Stats -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 fade-in">
             <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
                 <h3 class="text-lg font-semibold text-red-800">Total Requests</h3>
-                <p class="text-3xl font-bold text-red-700 mt-2">3</p>
+                <p class="text-3xl font-bold text-red-700 mt-2"><%= typeof total !== 'undefined' ? total : 0 %></p>
             </div>
             <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
                 <h3 class="text-lg font-semibold text-red-800">Fulfilled</h3>
-                <p class="text-3xl font-bold text-green-600 mt-2">2</p>
+                <p class="text-3xl font-bold text-green-600 mt-2"><%= typeof fulfilled !== 'undefined' ? fulfilled : 0 %></p>
             </div>
             <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
                 <h3 class="text-lg font-semibold text-red-800">Pending</h3>
-                <p class="text-3xl font-bold text-yellow-600 mt-2">1</p>
+                <p class="text-3xl font-bold text-yellow-600 mt-2"><%= typeof pending !== 'undefined' ? pending : 0 %></p>
             </div>
             <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
                 <h3 class="text-lg font-semibold text-red-800">Cancelled</h3>
@@ -72,8 +76,18 @@
         </div>
         <!-- Patient Data Table (Static placeholder) -->
         <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl fade-in mt-8">
-            <h2 class="text-lg font-semibold mb-4 text-red-800">🩸 Patient List</h2>
-            <p class="text-gray-700">Patient data will be displayed here soon.</p>
+            <h2 class="text-lg font-semibold mb-4 text-red-800">🩸 Patient Info</h2>
+            <% if (patientInfo) { %>
+              <table class="min-w-full bg-white rounded-xl border border-red-200">
+                <tr><th class="px-4 py-2 text-left">Full Name</th><td class="px-4 py-2"><%= patientInfo.Name %></td></tr>
+                <tr><th class="px-4 py-2 text-left">SSN</th><td class="px-4 py-2"><%= patientInfo.SSN %></td></tr>
+                <tr><th class="px-4 py-2 text-left">Contact No</th><td class="px-4 py-2"><%= patientInfo['Contact-No'] %></td></tr>
+                <tr><th class="px-4 py-2 text-left">Blood Type</th><td class="px-4 py-2"><%= patientInfo['Blood Group'] %></td></tr>
+                <tr><th class="px-4 py-2 text-left">Gender</th><td class="px-4 py-2"><%= patientInfo.Gender %></td></tr>
+              </table>
+            <% } else { %>
+              <p class="text-gray-700">Patient data not found.</p>
+            <% } %>
         </div>
     </main>
     <!-- Footer -->
