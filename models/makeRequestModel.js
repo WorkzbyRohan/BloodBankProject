@@ -51,4 +51,34 @@ module.exports = class MakeRequest {
       throw err;
     }
   }
+
+  static async getDonorsByBloodGroup(bloodGroup) {
+    try {
+      const [rows] = await db.execute('SELECT SSN FROM donor WHERE `blood group` = ?', [bloodGroup]);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getLatestRequestBySSN(ssn) {
+    try {
+      const [rows] = await db.execute('SELECT * FROM make_request WHERE SSN = ? ORDER BY Date DESC, rid DESC LIMIT 1', [ssn]);
+      return rows[0] || null;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async createNotification(donorSSN, rid, message) {
+    try {
+      const [result] = await db.execute(
+        'INSERT INTO have_request (d_SSN, rid, message, status) VALUES (?, ?, ?, ?)',
+        [donorSSN, rid, message, 'Pending']
+      );
+      return result.affectedRows > 0;
+    } catch (err) {
+      throw err;
+    }
+  }
 } 

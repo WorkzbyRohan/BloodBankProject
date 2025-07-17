@@ -24,4 +24,42 @@ module.exports = class Donor {
       throw err;
     }
   }
+
+  static async getNotificationsBySSN(ssn, limit) {
+    try {
+      let sql = "SELECT hr.*, mr.Name as patientName, mr.`Contact-No` as patientContact FROM have_request hr JOIN make_request mr ON hr.rid = mr.rid WHERE hr.d_SSN = ? ORDER BY hr.did DESC";
+      const params = [ssn];
+      if (limit) {
+        sql += " LIMIT " + Number(limit);
+      }
+      const [rows] = await db.execute(sql, params);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getTrackRecordsBySSN(ssn) {
+    try {
+      const [rows] = await db.execute(
+        'SELECT * FROM track_record WHERE SSN = ? ORDER BY Date DESC',
+        [ssn]
+      );
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getTrackRecordsFromHaveRequest(ssn) {
+    try {
+      const [rows] = await db.execute(
+        "SELECT hr.*, mr.Hospital, mr.Date FROM have_request hr JOIN make_request mr ON hr.rid = mr.rid WHERE hr.d_SSN = ? AND (hr.status = 'Completed' OR hr.status = 'Rejected') ORDER BY hr.did DESC",
+        [ssn]
+      );
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

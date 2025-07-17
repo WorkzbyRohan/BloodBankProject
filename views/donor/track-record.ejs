@@ -22,6 +22,7 @@
             <span class="inline-block bg-white bg-opacity-10 rounded-full p-1"><svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/><circle cx="12" cy="11" r="3"/></svg></span>BloodLink
         </div>
         <div class="space-x-6 text-lg">
+            <a href="/donor/donor" class="hover:underline transition">Dashboard</a>
             <a href="/donor/track-record" class="underline font-bold">Track Record</a>
             <a href="/donor/notifications" class="hover:underline transition">Notifications</a>
             <a href="/donor/benefits" class="hover:underline transition">Earn Benefits</a>
@@ -49,18 +50,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="text-center border-b hover:bg-red-50 transition">
-                        <td class="px-6 py-4">June 25, 2025</td>
-                        <td class="px-6 py-4">City Hospital</td>
-                        <td class="px-6 py-4">Lahore</td>
-                        <td class="px-6 py-4 text-green-600 font-bold">Completed</td>
-                    </tr>
-                    <tr class="text-center border-b hover:bg-red-50 transition">
-                        <td class="px-6 py-4">March 12, 2025</td>
-                        <td class="px-6 py-4">Red Cross Clinic</td>
-                        <td class="px-6 py-4">Karachi</td>
-                        <td class="px-6 py-4 text-green-600 font-bold">Completed</td>
-                    </tr>
+                  <% if (trackRecords && trackRecords.length > 0) { %>
+                    <% trackRecords.forEach(function(record) { %>
+                      <tr class="text-center border-b hover:bg-red-50 transition">
+                        <td class="px-6 py-4"><%= record.Date %></td>
+                        <td class="px-6 py-4"><%= record.Hospital %></td>
+                        <td class="px-6 py-4"><%= record.Location %></td>
+                        <td class="px-6 py-4 text-green-600 font-bold"><%= record.Status %></td>
+                      </tr>
+                    <% }); %>
+                  <% } else { %>
+                    <tr><td colspan="4" class="text-center py-6 text-gray-500">No donation records found.</td></tr>
+                  <% } %>
                 </tbody>
             </table>
         </div>

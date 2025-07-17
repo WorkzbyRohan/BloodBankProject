@@ -22,6 +22,7 @@
             <span class="inline-block bg-white bg-opacity-10 rounded-full p-1"><svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/><circle cx="12" cy="11" r="3"/></svg></span>BloodLink
         </div>
         <div class="space-x-6 text-lg">
+            <a href="/donor/donor" class="hover:underline transition">Dashboard</a>
             <a href="/donor/track-record" class="hover:underline transition">Track Record</a>
             <a href="/donor/notifications" class="underline font-bold">Notifications</a>
             <a href="/donor/benefits" class="hover:underline transition">Earn Benefits</a>
@@ -39,24 +40,21 @@
     <!-- Content -->
     <main class="flex-1 p-6 max-w-2xl mx-auto w-full">
         <ul class="space-y-6 fade-in">
-            <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row md:items-center md:justify-between border border-red-200">
+          <% if (notifications && notifications.length > 0) { %>
+            <% notifications.forEach(function(notification) { %>
+              <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row md:items-center md:justify-between border border-red-200">
                 <div>
-                    <p class="font-bold text-red-700">Blood Group: <span class="text-gray-800">A+</span></p>
-                    <p class="text-gray-600">Location: Mercy Hospital</p>
+                  <p class="font-bold text-red-700"><%= notification.message %></p>
+                  <p class="text-gray-700 mt-1">Patient: <span class="font-semibold"><%= notification.patientName %></span> | Contact: <span class="font-semibold"><%= notification.patientContact %></span></p>
                 </div>
                 <div class="mt-2 md:mt-0">
-                    <span class="inline-block bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold">3:00 PM Today</span>
+                  <span class="inline-block bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold"><%= notification.status %></span>
                 </div>
-            </li>
-            <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl flex flex-col md:flex-row md:items-center md:justify-between border border-red-200">
-                <div>
-                    <p class="font-bold text-red-700">Blood Group: <span class="text-gray-800">O-</span></p>
-                    <p class="text-gray-600">Location: City Clinic</p>
-                </div>
-                <div class="mt-2 md:mt-0">
-                    <span class="inline-block bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold">9:00 AM Tomorrow</span>
-                </div>
-            </li>
+              </li>
+            <% }); %>
+          <% } else { %>
+            <li class="text-center text-gray-500 py-8">No notifications found.</li>
+          <% } %>
         </ul>
     </main>
     <!-- Footer -->
