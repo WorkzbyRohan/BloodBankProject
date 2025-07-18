@@ -11,5 +11,6 @@ patientRouter.get('/request-blood', isAuthenticated, patientController.getReques
 patientRouter.get('/request-history', isAuthenticated, patientController.getRequestHistory);
 patientRouter.get('/p-notification', isAuthenticated, patientController.getPatientNotification);
 patientRouter.post('/submit-request', isAuthenticated, patientController.postRequestBlood);
+patientRouter.post('/approve-request', isAuthenticated, patientController.approveRequest);
 module.exports = patientRouter;
 

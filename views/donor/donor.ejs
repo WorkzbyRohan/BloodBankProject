@@ -20,12 +20,12 @@
         <div class="text-2xl font-extrabold tracking-wide flex items-center gap-2">
             <span class="inline-block bg-white bg-opacity-10 rounded-full p-1"><svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/><circle cx="12" cy="11" r="3"/></svg></span>BloodLink
         </div>
-        <div class="space-x-6 text-lg">
-            <a href="/donor/donor" class="underline font-bold">Dashboard</a>
-            <a href="/donor/track-record" class="hover:underline transition">Track Record</a>
-            <a href="/donor/notifications" class="hover:underline transition">Notifications</a>
-            <a href="/donor/benefits" class="hover:underline transition">Earn Benefits</a>
-            <a href="/index" class="ml-4 hover:underline transition">Logout</a>
+        <div class="space-x-4 md:space-x-6 text-lg flex items-center">
+            <a href="/donor/donor" class="px-3 py-1 rounded-lg transition font-semibold <%= (typeof donorName !== 'undefined') ? 'bg-white bg-opacity-20 text-white underline' : 'hover:bg-white hover:bg-opacity-10' %>">Dashboard</a>
+            <a href="/donor/track-record" class="px-3 py-1 rounded-lg transition font-semibold hover:bg-white hover:bg-opacity-10">Track Record</a>
+            <a href="/donor/notifications" class="px-3 py-1 rounded-lg transition font-semibold hover:bg-white hover:bg-opacity-10">Notifications</a>
+            <a href="/donor/benefits" class="px-3 py-1 rounded-lg transition font-semibold hover:bg-white hover:bg-opacity-10">Earn Benefits</a>
+            <a href="/index" class="ml-2 px-3 py-1 rounded-lg transition font-semibold hover:bg-white hover:bg-opacity-10">Logout</a>
         </div>
     </nav>
     <!-- Hero Section -->
@@ -38,43 +38,46 @@
     </section>
     <!-- Main Content -->
     <main class="flex-1 p-6 max-w-5xl mx-auto w-full">
-        <!-- Impact Highlight -->
-        <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl mb-8 border-l-4 border-red-700 flex items-center space-x-4 fade-in">
-            <span class="text-3xl text-red-700">❤️</span>
-            <div>
-                <h2 class="text-lg font-semibold mb-1 text-red-800">Your Impact</h2>
-                <p>Your donation on <span class="font-bold">June 25, 2025</span> at <span class="font-bold">City Hospital</span> helped save the life of a <span class="font-bold">6-year-old child</span> battling Thalassemia.</p>
-            </div>
-        </div>
         <!-- Quick Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 fade-in">
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border-2 border-red-200 hover:shadow-xl transition-all duration-200 flex flex-col items-center">
+                <span class="text-3xl text-red-700 mb-2">🩸</span>
                 <h3 class="text-lg font-semibold text-red-800">Total Donations</h3>
-                <p class="text-3xl font-bold text-red-700 mt-2">5</p>
+                <p class="text-3xl font-bold text-red-700 mt-2"><%= typeof totalDonations !== 'undefined' ? totalDonations : 0 %></p>
             </div>
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border-2 border-red-200 hover:shadow-xl transition-all duration-200 flex flex-col items-center">
+                <span class="text-2xl text-green-600 mb-2">🏅</span>
                 <h3 class="text-lg font-semibold text-red-800">Rank</h3>
-                <p class="text-xl font-bold text-green-600 mt-2">Tier 2</p>
-                <p class="text-sm text-gray-600">2 more to Tier 3</p>
+                <p class="text-xl font-bold text-green-600 mt-2"><%= tier %></p>
+                <% if (tier !== 'Tier 3') { %>
+                  <p class="text-sm text-gray-600"><%= toNextTier %> more to <%= tier === 'Tier 1' ? 'Tier 2' : 'Tier 3' %></p>
+                <% } else { %>
+                  <p class="text-sm text-gray-600">Highest tier achieved!</p>
+                <% } %>
             </div>
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border-2 border-red-200 hover:shadow-xl transition-all duration-200 flex flex-col items-center">
+                <span class="text-2xl text-green-600 mb-2">✅</span>
                 <h3 class="text-lg font-semibold text-red-800">Eligibility</h3>
-                <p class="text-xl font-bold text-green-600 mt-2">✅ Eligible</p>
+                <p class="text-xl font-bold text-green-600 mt-2">Eligible</p>
             </div>
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border border-red-200">
+            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg text-center border-2 border-red-200 hover:shadow-xl transition-all duration-200 flex flex-col items-center">
+                <span class="text-2xl text-blue-600 mb-2">🎁</span>
                 <h3 class="text-lg font-semibold text-red-800">Benefits</h3>
                 <p class="text-xl font-bold text-blue-600 mt-2">2 Claimed</p>
             </div>
         </div>
         <!-- Latest Notifications -->
-        <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl fade-in">
-            <h2 class="text-lg font-semibold mb-2 text-red-800">🔔 Latest Notifications</h2>
-            <ul class="list-disc list-inside space-y-2">
+        <div class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl fade-in border border-red-200">
+            <h2 class="text-lg font-semibold mb-2 text-red-800 flex items-center gap-2">🔔 Latest Notifications</h2>
+            <ul class="space-y-4">
               <% if (latestNotifications && latestNotifications.length > 0) { %>
                 <% latestNotifications.forEach(function(notification) { %>
-                  <li>
-                    <span class="font-bold text-red-700"><%= notification.message %></span><br>
-                    <span class="text-gray-700">Patient: <%= notification.patientName %> | Contact: <%= notification.patientContact %></span>
+                  <li class="bg-red-50 border-l-4 border-red-400 p-4 rounded-xl flex flex-col md:flex-row md:items-center md:justify-between">
+                    <div>
+                      <span class="font-bold text-red-700"><%= notification.message %></span><br>
+                      <span class="text-gray-700">Patient: <%= notification.patientName %> | Contact: <%= notification.patientContact %></span>
+                    </div>
+                    <span class="inline-block mt-2 md:mt-0 bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold"><%= notification.status %></span>
                   </li>
                 <% }); %>
               <% } else { %>

@@ -62,7 +62,18 @@
                           }
                         %>
                         <td class="px-6 py-4"><%= formatDate(request.Date) %></td>
-                        <td class="px-6 py-4 font-bold <%= request.Status === 'Pending' ? 'text-yellow-600' : 'text-green-600' %>"><%= request.Status %></td>
+                        <td class="px-6 py-4 font-bold <%= request.Status === 'Pending' ? 'text-yellow-600' : request.Status === 'Fulfilled' ? 'text-green-600' : 'text-gray-600' %>">
+                          <%= request.Status %>
+                          <% if (request.Status === 'Fulfilled' && request.donorName) { %><br>
+                            <span class="text-sm font-normal text-gray-700">Donor: <%= request.donorName %> (<%= request.donorContact %>)</span>
+                          <% } else if (request.hasAcceptedDonor) { %><br>
+                            <span class="text-sm font-normal text-gray-700">Donor: <%= request.donorName %> (<%= request.donorContact %>)</span>
+                            <form action="/patient/approve-request" method="POST" class="inline">
+                              <input type="hidden" name="rid" value="<%= request.rid %>">
+                              <button type="submit" class="ml-2 bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200">Approve</button>
+                            </form>
+                          <% } %>
+                        </td>
                       </tr>
                     <% }); %>
                   <% } else { %>

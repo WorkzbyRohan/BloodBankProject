@@ -38,15 +38,21 @@
     <!-- Content -->
     <main class="flex-1 p-6 max-w-2xl mx-auto w-full">
         <ul class="space-y-6 fade-in">
-            <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl border border-red-200">
-                <span class="font-bold text-red-700">Donor Rohan</span> accepted your <span class="font-semibold">O+ blood request</span> for <span class="text-gray-700">July 10, 2025</span>.
-            </li>
-            <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl border border-red-200">
-                Blood bank <span class="font-bold text-green-700">confirmed</span> your appointment at <span class="font-semibold">City Hospital</span>.
-            </li>
-            <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl border border-red-200">
-                Previous request for <span class="font-semibold">A+</span> was <span class="font-bold text-red-700">cancelled</span> due to no donor found.
-            </li>
+          <% if (notifications && notifications.length > 0) { %>
+            <% notifications.forEach(function(n) { %>
+              <li class="bg-white bg-opacity-95 p-6 rounded-3xl shadow-2xl border border-red-200">
+                <% if (n.status === 'Accepted') { %>
+                  <span class="font-bold text-green-700">Donor <%= n.Name %> (<%= n['contact-no'] %>) has <span class="underline">accepted</span> your request at <%= n.Hospital %>.</span>
+                <% } else if (n.status === 'Rejected') { %>
+                  <span class="font-bold text-red-700">Donor <%= n.Name %> (<%= n['contact-no'] %>) has <span class="underline">rejected</span> your request at <%= n.Hospital %>.</span>
+                <% } else if (n.status === 'Completed') { %>
+                  <span class="font-bold text-blue-700">Donor <%= n.Name %> (<%= n['contact-no'] %>) has <span class="underline">completed</span> your request at <%= n.Hospital %>.</span>
+                <% } %>
+              </li>
+            <% }); %>
+          <% } else { %>
+            <li class="text-gray-500">No notifications yet.</li>
+          <% } %>
         </ul>
     </main>
     <!-- Footer -->

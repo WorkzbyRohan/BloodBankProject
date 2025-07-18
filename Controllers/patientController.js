@@ -30,6 +30,27 @@ exports.getRequestHistory = async (req, res, next) => {
       return res.redirect('/index');
     }
     const requests = await MakeRequest.getBySSN(ssn);
+    // Attach donor info for completed requests
+    for (const req of requests) {
+      if (req.Status === 'Fulfilled') {
+        const [donorRows] = await require('../utils/databaseUtil').execute(
+          "SELECT d.Name, d.`contact-no` FROM donor d JOIN have_request hr ON d.SSN = hr.d_SSN WHERE hr.rid = ? AND hr.status = 'Completed' LIMIT 1",
+          [req.rid]
+        );
+        req.donorName = donorRows[0]?.Name || '';
+        req.donorContact = donorRows[0]?.['contact-no'] || '';
+      }
+      // Check if any donor has accepted
+      const [acceptedRows] = await require('../utils/databaseUtil').execute(
+        "SELECT d.Name, d.`contact-no` FROM donor d JOIN have_request hr ON d.SSN = hr.d_SSN WHERE hr.rid = ? AND hr.status = 'Accepted' LIMIT 1",
+        [req.rid]
+      );
+      if (acceptedRows.length > 0) {
+        req.hasAcceptedDonor = true;
+        req.donorName = acceptedRows[0].Name;
+        req.donorContact = acceptedRows[0]['contact-no'];
+      }
+    }
     res.render('patient/request-history', { requests });
   } catch (error) {
     console.error('Error fetching request history:', error);
@@ -37,8 +58,24 @@ exports.getRequestHistory = async (req, res, next) => {
   }
 }
 
-exports.getPatientNotification= (req, res, next) => {
-  res.render('patient/p-notification');
+exports.getPatientNotification = async (req, res, next) => {
+  try {
+    const ssn = req.session.user && req.session.user.id;
+    const [notifications] = await require('../utils/databaseUtil').execute(
+      `SELECT hr.status, d.Name, d.\`contact-no\`, mr.Hospital
+       FROM make_request mr
+       JOIN have_request hr ON mr.rid = hr.rid
+       JOIN donor d ON hr.d_SSN = d.SSN
+       WHERE mr.SSN = ?
+       AND hr.status IN ('Accepted', 'Rejected', 'Completed')
+       ORDER BY hr.did DESC`,
+      [ssn]
+    );
+    res.render('patient/p-notification', { notifications });
+  } catch (error) {
+    console.error('Error fetching patient notifications:', error);
+    res.render('patient/p-notification', { notifications: [], errorMessage: 'Could not fetch notifications.' });
+  }
 }
 
 exports.postRequestBlood = async (req, res, next) => {
@@ -73,5 +110,26 @@ exports.postRequestBlood = async (req, res, next) => {
   } catch (error) {
     console.error('Blood request error:', error);
     res.render('patient/request-blood', { errorMessage: 'An error occurred. Please try again.' });
+  }
+}
+
+exports.approveRequest = async (req, res, next) => {
+  try {
+    const { rid } = req.body;
+    if (!rid) return res.redirect('/patient/request-history');
+    // Set the accepted donor's have_request status to Completed
+    await require('../utils/databaseUtil').execute(
+      "UPDATE have_request SET status = 'Completed' WHERE rid = ? AND status = 'Accepted'",
+      [rid]
+    );
+    // Set the make_request status to Fulfilled
+    await require('../utils/databaseUtil').execute(
+      "UPDATE make_request SET Status = 'Fulfilled' WHERE rid = ?",
+      [rid]
+    );
+    res.redirect('/patient/request-history');
+  } catch (error) {
+    console.error('Error approving request:', error);
+    res.redirect('/patient/request-history');
   }
 }

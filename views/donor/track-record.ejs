@@ -17,11 +17,11 @@
 </head>
 <body class="bg-gradient-to-br from-gray-100 via-red-200 to-gray-300 text-gray-900 min-h-screen flex flex-col">
     <!-- Navbar -->
-    <nav class="bg-gradient-to-r from-red-800 via-red-700 to-red-600 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-10">
+    <nav class="bg-gradient-to-r from-red-900 via-red-700 to-red-500 text-white p-4 flex justify-between items-center shadow-lg sticky top-0 z-10">
         <div class="text-2xl font-extrabold tracking-wide flex items-center gap-2">
             <span class="inline-block bg-white bg-opacity-10 rounded-full p-1"><svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/><circle cx="12" cy="11" r="3"/></svg></span>BloodLink
         </div>
-        <div class="space-x-6 text-lg">
+        <div class="space-x-4 md:space-x-6 text-lg flex items-center">
             <a href="/donor/donor" class="hover:underline transition">Dashboard</a>
             <a href="/donor/track-record" class="underline font-bold">Track Record</a>
             <a href="/donor/notifications" class="hover:underline transition">Notifications</a>
@@ -30,17 +30,17 @@
         </div>
     </nav>
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-red-900 via-red-700 to-gray-200 py-10 flex flex-col items-center justify-center text-center mb-8 fade-in">
+    <section class="relative bg-gradient-to-br from-red-900 via-red-700 to-red-200 py-10 flex flex-col items-center justify-center text-center mb-8 fade-in">
         <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80" alt="Blood Donation" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none" />
         <div class="relative z-10">
             <h1 class="text-5xl md:text-6xl font-extrabold mb-2 text-red-100 drop-shadow">Your Blood Donation History</h1>
-            <p class="text-lg md:text-2xl text-gray-100 mb-2 max-w-2xl mx-auto">Track your life-saving contributions and see your impact over time.</p>
+            <p class="text-lg md:text-2xl text-red-100 mb-2 max-w-2xl mx-auto">Track your life-saving contributions and see your impact over time.</p>
         </div>
     </section>
     <!-- Content -->
     <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
         <div class="overflow-x-auto fade-in">
-            <table class="table-auto w-full bg-white bg-opacity-95 rounded-3xl shadow-2xl border border-red-200">
+            <table class="table-auto w-full bg-red-50 bg-opacity-95 rounded-3xl shadow-2xl border-2 border-red-200">
                 <thead>
                     <tr class="bg-red-100 text-red-800">
                         <th class="px-6 py-3 text-left">Date</th>
@@ -51,12 +51,20 @@
                 </thead>
                 <tbody>
                   <% if (trackRecords && trackRecords.length > 0) { %>
-                    <% trackRecords.forEach(function(record) { %>
-                      <tr class="text-center border-b hover:bg-red-50 transition">
+                    <% trackRecords.forEach(function(record, idx) { %>
+                      <tr class="text-center border-b hover:bg-red-100 transition <%= idx % 2 === 0 ? 'bg-white' : 'bg-red-50' %>">
                         <td class="px-6 py-4"><%= record.Date %></td>
                         <td class="px-6 py-4"><%= record.Hospital %></td>
-                        <td class="px-6 py-4"><%= record.Location %></td>
-                        <td class="px-6 py-4 text-green-600 font-bold"><%= record.Status %></td>
+                        <td class="px-6 py-4"><%= record.Location || '-' %></td>
+                        <td class="px-6 py-4">
+                          <% if (record.status === 'Completed') { %>
+                            <span class="inline-block bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">Completed</span>
+                          <% } else if (record.status === 'Rejected') { %>
+                            <span class="inline-block bg-red-200 text-red-800 px-3 py-1 rounded-full font-semibold">Rejected</span>
+                          <% } else { %>
+                            <span class="inline-block bg-gray-100 text-gray-700 px-3 py-1 rounded-full font-semibold"><%= record.status %></span>
+                          <% } %>
+                        </td>
                       </tr>
                     <% }); %>
                   <% } else { %>

@@ -48,7 +48,23 @@
                   <p class="text-gray-700 mt-1">Patient: <span class="font-semibold"><%= notification.patientName %></span> | Contact: <span class="font-semibold"><%= notification.patientContact %></span></p>
                 </div>
                 <div class="mt-2 md:mt-0">
-                  <span class="inline-block bg-red-100 text-red-700 px-4 py-2 rounded-full font-semibold"><%= notification.status %></span>
+                  <% if (notification.status === 'Pending' || notification.status === 'Already accepted by another donor') { %>
+                    <form action="/donor/notification-action" method="POST" class="inline">
+                      <input type="hidden" name="did" value="<%= notification.did %>">
+                      <button type="submit" name="action" value="Accepted" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200 mr-2">Accept</button>
+                    </form>
+                    <form action="/donor/notification-action" method="POST" class="inline">
+                      <input type="hidden" name="did" value="<%= notification.did %>">
+                      <button type="submit" name="action" value="Rejected" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200">Reject</button>
+                    </form>
+                  <% } else if (notification.status === 'Accepted') { %>
+                    <form action="/donor/notification-action" method="POST" class="inline">
+                      <input type="hidden" name="did" value="<%= notification.did %>">
+                      <button type="submit" name="action" value="Rejected" class="bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200">Reject</button>
+                    </form>
+                  <% } else { %>
+                    <span class="inline-block bg-gray-100 text-gray-700 px-4 py-2 rounded-full font-semibold"><%= notification.status %></span>
+                  <% } %>
                 </div>
               </li>
             <% }); %>
