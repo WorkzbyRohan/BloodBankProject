@@ -51,51 +51,45 @@
     <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
         <h2 class="text-2xl font-bold mb-8 text-center text-red-800">Your Benefits</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 fade-in">
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg flex items-center space-x-4 hover:scale-105 hover:shadow-2xl transition border border-red-200">
-                <div class="bg-red-100 p-3 rounded-full">
-                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 1.343-3 3 0 2.5 3 5 3 5s3-2.5 3-5c0-1.657-1.343-3-3-3z"/>
-                        <circle cx="12" cy="11" r="3"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg text-red-800">10% Off at ABC Pharmacy</h3>
-                    <p class="text-gray-600">Available after 3 donations</p>
-                </div>
+            <!-- All Benefits Offered -->
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-red-700 text-center">All Available Benefits</h3>
+                <ul class="space-y-4">
+                  <% if (allBenefits && allBenefits.length > 0) { %>
+                    <% allBenefits.forEach(function(benefit) { %>
+                      <% const earned = earnedBenefits.some(b => b.id === benefit.id); %>
+                      <li class="bg-white bg-opacity-95 p-5 rounded-2xl shadow flex flex-col border border-red-200">
+                        <span class="font-bold text-lg text-red-800"><%= benefit.name %></span>
+                        <span class="text-gray-600">Discount: <%= benefit.discount %>%</span>
+                        <span class="text-gray-600">Required Donations: <%= benefit.required_donations %></span>
+                        <% if (earned) { %>
+                          <span class="mt-2 px-2 py-1 bg-green-200 text-green-800 rounded-full text-xs font-bold w-max">Unlocked</span>
+                        <% } else { %>
+                          <span class="mt-2 px-2 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-bold w-max">Locked</span>
+                        <% } %>
+                      </li>
+                    <% }); %>
+                  <% } else { %>
+                    <li class="text-gray-500">No benefits available.</li>
+                  <% } %>
+                </ul>
             </div>
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg flex items-center space-x-4 hover:scale-105 hover:shadow-2xl transition border border-red-200">
-                <div class="bg-red-100 p-3 rounded-full">
-                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2a4 4 0 018 0v2"/>
-                        <circle cx="12" cy="7" r="4"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg text-red-800">Free Gym Membership - 1 Month</h3>
-                    <p class="text-gray-600">Available after 5 donations</p>
-                </div>
-            </div>
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg flex items-center space-x-4 hover:scale-105 hover:shadow-2xl transition border border-red-200">
-                <div class="bg-red-100 p-3 rounded-full">
-                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 17l4 4 4-4m0-5a4 4 0 10-8 0 4 4 0 008 0z"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg text-red-800">Health Checkup Discount</h3>
-                    <p class="text-gray-600">Claimed on June 25, 2025</p>
-                </div>
-            </div>
-            <div class="bg-white bg-opacity-95 p-6 rounded-2xl shadow-lg flex items-center space-x-4 hover:scale-105 hover:shadow-2xl transition border border-red-200">
-                <div class="bg-red-100 p-3 rounded-full">
-                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m4 0h-1v4h-1"/>
-                    </svg>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg text-red-800">Priority Appointment Booking</h3>
-                    <p class="text-gray-600">Available after 7 donations</p>
-                </div>
+            <!-- Earned Benefits -->
+            <div>
+                <h3 class="text-xl font-bold mb-4 text-green-700 text-center">Benefits You've Earned</h3>
+                <ul class="space-y-4">
+                  <% if (earnedBenefits && earnedBenefits.length > 0) { %>
+                    <% earnedBenefits.forEach(function(benefit) { %>
+                      <li class="bg-green-50 bg-opacity-95 p-5 rounded-2xl shadow flex flex-col border border-green-200">
+                        <span class="font-bold text-lg text-green-800"><%= benefit.name %></span>
+                        <span class="text-gray-600">Discount: <%= benefit.discount %>%</span>
+                        <span class="text-gray-600">Required Donations: <%= benefit.required_donations %></span>
+                      </li>
+                    <% }); %>
+                  <% } else { %>
+                    <li class="text-gray-500">You haven't earned any benefits yet.</li>
+                  <% } %>
+                </ul>
             </div>
         </div>
     </main>

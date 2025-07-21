@@ -50,6 +50,16 @@ exports.getRequestHistory = async (req, res, next) => {
         req.donorName = acceptedRows[0].Name;
         req.donorContact = acceptedRows[0]['contact-no'];
       }
+      // Fetch all donors and their quantities for this request, including SSN
+      const [donorList] = await require('../utils/databaseUtil').execute(
+        "SELECT d.Name, d.`contact-no`, d.SSN, hr.quantity, hr.status FROM have_request hr JOIN donor d ON hr.d_SSN = d.SSN WHERE hr.rid = ? AND hr.status IN ('Accepted', 'Completed')",
+        [req.rid]
+      );
+      req.donorList = donorList.map(d => ({
+        ...d,
+        canApproveDonor: d.status === 'Accepted'
+      }));
+      req.totalFulfilled = donorList.filter(d => d.status === 'Completed').reduce((sum, d) => sum + (d.quantity || 0), 0);
     }
     res.render('patient/request-history', { requests });
   } catch (error) {
@@ -115,18 +125,36 @@ exports.postRequestBlood = async (req, res, next) => {
 
 exports.approveRequest = async (req, res, next) => {
   try {
-    const { rid } = req.body;
-    if (!rid) return res.redirect('/patient/request-history');
-    // Set the accepted donor's have_request status to Completed
-    await require('../utils/databaseUtil').execute(
-      "UPDATE have_request SET status = 'Completed' WHERE rid = ? AND status = 'Accepted'",
+    const { rid, donorSSN } = req.body;
+    if (!rid || !donorSSN) return res.redirect('/patient/request-history');
+    console.log('Approving donor', donorSSN, 'for request', rid);
+    const [updateResult] = await require('../utils/databaseUtil').execute(
+      "UPDATE have_request SET status = 'Completed' WHERE rid = ? AND d_SSN = ? AND status = 'Accepted'",
+      [rid, donorSSN]
+    );
+    console.log('Rows affected in have_request:', updateResult.affectedRows);
+    // Check if total completed bottles meets requirement
+    const [[{ totalCompleted = 0 } = {}]] = await require('../utils/databaseUtil').execute(
+      "SELECT SUM(quantity) as totalCompleted FROM have_request WHERE rid = ? AND status = 'Completed'",
       [rid]
     );
-    // Set the make_request status to Fulfilled
-    await require('../utils/databaseUtil').execute(
-      "UPDATE make_request SET Status = 'Fulfilled' WHERE rid = ?",
+    const [[{ Quantity: requiredQuantity } = {}]] = await require('../utils/databaseUtil').execute(
+      "SELECT Quantity FROM make_request WHERE rid = ?",
       [rid]
     );
+    if (totalCompleted >= requiredQuantity) {
+      // Set the make_request status to Fulfilled
+      await require('../utils/databaseUtil').execute(
+        "UPDATE make_request SET Status = 'Fulfilled' WHERE rid = ?",
+        [rid]
+      );
+      // Set all other donors to Already accepted by another donor
+      await require('../utils/databaseUtil').execute(
+        "UPDATE have_request SET status = 'Already accepted by another donor' WHERE rid = ? AND status NOT IN ('Completed', 'Rejected')",
+        [rid]
+      );
+      console.log('Request', rid, 'fulfilled.');
+    }
     res.redirect('/patient/request-history');
   } catch (error) {
     console.error('Error approving request:', error);

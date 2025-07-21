@@ -49,9 +49,11 @@
                 </div>
                 <div class="mt-2 md:mt-0">
                   <% if (notification.status === 'Pending' || notification.status === 'Already accepted by another donor') { %>
-                    <form action="/donor/notification-action" method="POST" class="inline">
+                    <form action="/donor/notification-action" method="POST" class="inline" onsubmit="return showQuantityPrompt(this);" data-remaining="<%= notification.remainingBottles %>">
                       <input type="hidden" name="did" value="<%= notification.did %>">
-                      <button type="submit" name="action" value="Accepted" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200 mr-2">Accept</button>
+                      <input type="hidden" name="action" value="Accepted">
+                      <input type="hidden" name="quantity" value="">
+                      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200 mr-2">Accept</button>
                     </form>
                     <form action="/donor/notification-action" method="POST" class="inline">
                       <input type="hidden" name="did" value="<%= notification.did %>">
@@ -79,3 +81,21 @@
     </footer>
 </body>
 </html>
+<script>
+function showQuantityPrompt(form) {
+  var remaining = parseInt(form.dataset.remaining, 10);
+  var quantity = prompt('How many bottles can you donate? (Max: ' + remaining + ')');
+  if (quantity === null) return false;
+  quantity = parseInt(quantity, 10);
+  if (!quantity || quantity <= 0) {
+    alert('Please enter a valid quantity.');
+    return false;
+  }
+  if (quantity > remaining) {
+    alert('Only ' + remaining + ' bottle(s) are still required for this request.');
+    return false;
+  }
+  form.quantity.value = quantity;
+  return true;
+}
+</script>

@@ -44,14 +44,38 @@ exports.getNotifications = async (req, res, next) => {
       return res.redirect('/index');
     }
     const notifications = await Donor.getNotificationsBySSN(ssn);
+    // For each notification, calculate remaining required bottles
+    for (const notification of notifications) {
+      if (notification.status === 'Pending' || notification.status === 'Already accepted by another donor') {
+        // Get required quantity from make_request
+        const [[{ Quantity: requiredQuantity } = {}]] = await require('../utils/databaseUtil').execute(
+          "SELECT Quantity FROM make_request WHERE rid = ?",
+          [notification.rid]
+        );
+        // Sum all accepted/completed quantities for this request
+        const [[{ totalAccepted = 0 } = {}]] = await require('../utils/databaseUtil').execute(
+          "SELECT SUM(quantity) as totalAccepted FROM have_request WHERE rid = ? AND status IN ('Accepted', 'Completed')",
+          [notification.rid]
+        );
+        notification.remainingBottles = Math.max((requiredQuantity || 0) - (totalAccepted || 0), 0);
+      }
+    }
     res.render('donor/notifications', { notifications });
   } catch (error) {
     console.error('Error fetching donor notifications:', error);
     res.render('donor/notifications', { notifications: [], errorMessage: 'Could not fetch notifications.' });
   }
 }   
-exports.getBenefits=(req,res,next)=>{     
-  res.render('donor/benefits');
+exports.getBenefits = async (req, res, next) => {
+  try {
+    const ssn = req.session.user && req.session.user.id;
+    const allBenefits = await Donor.getAllBenefits();
+    const earnedBenefits = await Donor.getEarnedBenefits(ssn);
+    res.render('donor/benefits', { allBenefits, earnedBenefits });
+  } catch (error) {
+    console.error('Error fetching benefits:', error);
+    res.render('donor/benefits', { allBenefits: [], earnedBenefits: [], errorMessage: 'Could not fetch benefits.' });
+  }
 } 
 exports.handleNotificationAction = async (req, res, next) => {
   try {
@@ -62,11 +86,16 @@ exports.handleNotificationAction = async (req, res, next) => {
     await Donor.updateNotificationStatus(did, action);
     // If accepted, set all other notifications for this rid to 'Already accepted by another donor'
     if (action === 'Accepted') {
-      const notification = await Donor.getNotificationById(did);
-      if (notification) {
-        console.log('Updating others for rid:', notification.rid, 'excluding d_SSN:', notification.d_SSN);
-        await Donor.setOtherDonorsUnable(notification.rid, notification.d_SSN);
+      const { quantity } = req.body;
+      if (!quantity || isNaN(quantity) || quantity <= 0) {
+        return res.redirect('/donor/notifications');
       }
+      // Save the quantity for this donor's have_request row
+      await require('../utils/databaseUtil').execute(
+        'UPDATE have_request SET quantity = ? WHERE did = ?',
+        [quantity, did]
+      );
+      // Do NOT update other donors or the request here. Wait for patient approval.
     }
     // If a donor rejects after accepting, revert others and request to pending
     if (action === 'Rejected') {

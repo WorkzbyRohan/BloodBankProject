@@ -145,4 +145,25 @@ module.exports = class Donor {
       throw err;
     }
   }
+
+  static async getAllBenefits() {
+    try {
+      const [rows] = await db.execute('SELECT * FROM benefits ORDER BY required_donations ASC');
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getEarnedBenefits(ssn) {
+    try {
+      // Get the number of completed donations
+      const completed = await this.countCompletedDonations(ssn);
+      // Get all benefits where required_donations <= completed
+      const [rows] = await db.execute('SELECT * FROM benefits WHERE required_donations <= ? ORDER BY required_donations ASC', [completed]);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

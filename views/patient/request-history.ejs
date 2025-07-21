@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -38,18 +38,62 @@
     <!-- Content -->
     <main class="flex-1 p-6 max-w-4xl mx-auto w-full">
         <div class="overflow-x-auto fade-in">
-            <table class="min-w-full bg-white bg-opacity-95 rounded-3xl shadow-2xl border border-red-200">
-                <thead>
-                    <tr class="bg-red-100 text-red-800">
+            <% if (requests && requests.length > 0) { %>
+              <% requests.forEach(function(request) { %>
+                <div class="bg-white bg-opacity-95 rounded-2xl shadow-lg p-6 mb-8 border-l-4 border-red-400 max-w-2xl mx-auto">
+                  <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                    <div>
+                      <span class="font-bold text-red-700">Requested:</span>
+                      <span class="font-bold text-lg"><%= request.Quantity %> bottle(s)</span>
+                    </div>
+                    <div>
+                      <span class="font-bold text-green-700">Fulfilled:</span>
+                      <span class="font-bold text-lg"><%= request.totalFulfilled %> bottle(s)</span>
+                    </div>
+                  </div>
+                  <div class="mb-4">
+                    <span class="font-bold text-gray-700">Donors:</span>
+                    <% if (request.donorList && request.donorList.length > 0) { %>
+                      <div class="flex flex-col gap-2 mt-2">
+                        <% request.donorList.forEach(function(donor) { %>
+                          <div class="flex items-center gap-2">
+                            <span class="inline-block bg-red-100 text-red-800 px-3 py-1 rounded-full font-semibold shadow">
+                              <%= donor.Name %> (<%= donor['contact-no'] %>) — <span class="font-bold"><%= donor.quantity %></span> bottle(s)
+                            </span>
+                            <% if (donor.canApproveDonor && request.Status === 'Pending') { %>
+                              <form action="/patient/approve-request" method="POST" class="inline">
+                                <input type="hidden" name="rid" value="<%= request.rid %>">
+                                <input type="hidden" name="donorSSN" value="<%= donor.SSN %>">
+                                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200">Approve</button>
+                              </form>
+                            <% } else if (donor.status === 'Completed') { %>
+                              <span class="ml-2 px-2 py-1 bg-green-200 text-green-800 rounded-full text-xs font-bold">Approved</span>
+                            <% } %>
+                          </div>
+                        <% }); %>
+                      </div>
+                    <% } else { %>
+                      <span class="text-gray-500 ml-2">No donors yet.</span>
+                    <% } %>
+                  </div>
+                  <% if (request.hasAcceptedDonor && request.Status === 'Pending') { %>
+                    <form action="/patient/approve-request" method="POST" class="mt-4">
+                      <input type="hidden" name="rid" value="<%= request.rid %>">
+                      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-xl shadow transition-all duration-200">
+                        Approve
+                      </button>
+                    </form>
+                  <% } %>
+                  <table class="min-w-full bg-white rounded-2xl shadow border border-red-200 mt-6">
+                    <thead>
+                      <tr class="bg-red-100 text-red-800">
                         <th class="px-6 py-3 text-left">Blood Type</th>
                         <th class="px-6 py-3 text-left">Hospital</th>
                         <th class="px-6 py-3 text-left">Date</th>
                         <th class="px-6 py-3 text-left">Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <% if (requests && requests.length > 0) { %>
-                    <% requests.forEach(function(request) { %>
+                      </tr>
+                    </thead>
+                    <tbody>
                       <tr class="text-center border-b hover:bg-red-50 transition">
                         <td class="px-6 py-4"><%= request.BloodType %></td>
                         <td class="px-6 py-4"><%= request.Hospital %></td>
@@ -64,23 +108,15 @@
                         <td class="px-6 py-4"><%= formatDate(request.Date) %></td>
                         <td class="px-6 py-4 font-bold <%= request.Status === 'Pending' ? 'text-yellow-600' : request.Status === 'Fulfilled' ? 'text-green-600' : 'text-gray-600' %>">
                           <%= request.Status %>
-                          <% if (request.Status === 'Fulfilled' && request.donorName) { %><br>
-                            <span class="text-sm font-normal text-gray-700">Donor: <%= request.donorName %> (<%= request.donorContact %>)</span>
-                          <% } else if (request.hasAcceptedDonor) { %><br>
-                            <span class="text-sm font-normal text-gray-700">Donor: <%= request.donorName %> (<%= request.donorContact %>)</span>
-                            <form action="/patient/approve-request" method="POST" class="inline">
-                              <input type="hidden" name="rid" value="<%= request.rid %>">
-                              <button type="submit" class="ml-2 bg-green-600 hover:bg-green-700 text-white font-bold py-1 px-4 rounded-xl shadow transition-all duration-200">Approve</button>
-                            </form>
-                          <% } %>
                         </td>
                       </tr>
-                    <% }); %>
-                  <% } else { %>
-                    <tr><td colspan="4" class="text-center py-6 text-gray-500">No blood requests found.</td></tr>
-                  <% } %>
-                </tbody>
-            </table>
+                    </tbody>
+                  </table>
+                </div>
+              <% }); %>
+            <% } else { %>
+              <tr><td colspan="4" class="text-center py-6 text-gray-500">No blood requests found.</td></tr>
+            <% } %>
         </div>
     </main>
     <!-- Footer -->
