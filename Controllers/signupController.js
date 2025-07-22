@@ -3,7 +3,7 @@ const Donor = require('../models/donorModel');
 
 exports.postSignup = async (req, res, next) => {
     try {
-        const { role, name, ssn, contact, bloodType, gender, password } = req.body;
+        const { role, name, ssn, contact, bloodType, gender, password, location } = req.body;
 
         if (role === 'patient') {
             // Create new patient
@@ -13,7 +13,8 @@ exports.postSignup = async (req, res, next) => {
                 'contact-no': contact,  // Match the database column name
                 bloodType,
                 gender,
-                password
+                password,
+                location
             });
 
             if (result) {
@@ -33,7 +34,8 @@ exports.postSignup = async (req, res, next) => {
                 'contact-no': contact,  // Match the database column name
                 bloodType,
                 gender,
-                password
+                password,
+                location
             });
 
             if (result) {

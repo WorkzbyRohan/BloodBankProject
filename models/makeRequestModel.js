@@ -61,6 +61,15 @@ module.exports = class MakeRequest {
     }
   }
 
+  static async getDonorsByBloodGroupAndLocation(bloodGroup, location) {
+    try {
+      const [rows] = await db.execute('SELECT SSN FROM donor WHERE TRIM(LOWER(`blood group`)) = TRIM(LOWER(?)) AND TRIM(LOWER(location)) = TRIM(LOWER(?))', [bloodGroup, location]);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   static async getLatestRequestBySSN(ssn) {
     try {
       const [rows] = await db.execute('SELECT * FROM make_request WHERE SSN = ? ORDER BY Date DESC, rid DESC LIMIT 1', [ssn]);

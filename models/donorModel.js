@@ -16,8 +16,8 @@ module.exports = class Donor {
   static async create(donorData) {
     try {
       const [result] = await db.execute(
-        'INSERT INTO donor (Name, SSN, `contact-no`, `blood group`, Gender, password) VALUES (?, ?, ?, ?, ?, ?)',
-        [donorData.name, donorData.ssn, donorData['contact-no'], donorData.bloodType, donorData.gender, donorData.password]
+        'INSERT INTO donor (Name, SSN, `contact-no`, `blood group`, Gender, password, Location) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [donorData.name, donorData.ssn, donorData['contact-no'], donorData.bloodType, donorData.gender, donorData.password, donorData.location]
       );
       return result.affectedRows > 0;
     } catch (err) {

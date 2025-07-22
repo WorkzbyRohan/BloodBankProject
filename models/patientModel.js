@@ -25,8 +25,8 @@ module.exports = class Patient {
   static async create(patientData) {
     try {
       const [result] = await db.execute(
-        'INSERT INTO patient (Name, SSN, `Contact-No`, BloodType, Gender, Password) VALUES (?, ?, ?, ?, ?, ?)', 
-        [patientData.name, patientData.ssn, patientData['contact-no'], patientData.bloodType, patientData.gender, patientData.password]
+        'INSERT INTO patient (Name, SSN, `Contact-No`, BloodType, Gender, Password, Location) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+        [patientData.name, patientData.ssn, patientData['contact-no'], patientData.bloodType, patientData.gender, patientData.password, patientData.location]
       );
       return result.affectedRows > 0;
     } catch (err) {

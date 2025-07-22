@@ -102,8 +102,10 @@ exports.postRequestBlood = async (req, res, next) => {
       Quantity
     });
     if (result) {
-      // Find donors with the same blood group and notify them
-      const donors = await MakeRequest.getDonorsByBloodGroup(BloodType);
+      // Find the patient to get their location
+      const patient = await Patient.getBySSN(SSN);
+      // Find donors with the same blood group AND location and notify them
+      const donors = await MakeRequest.getDonorsByBloodGroupAndLocation(BloodType, patient.location);
       // Get the latest request for this patient (to get the rid and hospital)
       const latestRequest = await MakeRequest.getLatestRequestBySSN(SSN);
       if (latestRequest && donors.length > 0) {
